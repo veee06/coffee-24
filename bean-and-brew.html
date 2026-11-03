@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bean &amp; Brew – Coffee Shop Management System</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F3EC;--card:#fff;--ink:#2B1B12;--mut:#7A6A5E;--br:#4A2F22;--br2:#6B4A37;--sand:#E8D5B5;--cream:#F1E9DC;--line:#E9E0D2;--grn:#4F7A55;--grnbg:#E6EEE3;--red:#B5472F;--redbg:#FBEDE7;--amb:#B8842B;--ambbg:#F6E7C9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1C1410;--card:#2A1F19;--ink:#F4EBDD;--mut:#B3A396;--br:#7A5139;--br2:#8C6046;--sand:#5A4333;--cream:#3A2B22;--line:#3E3027;--grnbg:#2B3A2C;--redbg:#432620;--ambbg:#4A3A1C}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#1C1410;--card:#2A1F19;--ink:#F4EBDD;--mut:#B3A396;--br:#7A5139;--br2:#8C6046;--sand:#5A4333;--cream:#3A2B22;--line:#3E3027;--grnbg:#2B3A2C;--redbg:#432620;--ambbg:#4A3A1C}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--br2);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--bg);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.top b{font-size:15px;letter-spacing:.2px}
+.seg{display:flex;background:var(--cream);border-radius:99px;padding:4px}
+.seg button{padding:7px 18px;border-radius:99px;font-weight:600;color:var(--mut)}
+.seg button.on{background:var(--br);color:#fff}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#9bd3a0;margin-right:8px}
+/* desktop shell */
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 57px)}
+.side{background:#4A2F22;color:#F3E7D6;padding:26px 15px;display:flex;flex-direction:column}
+.side h1{font-size:20px;font-weight:700;padding:0 10px;color:#fff}
+.side small{display:block;padding:2px 10px 18px;font-size:10px;letter-spacing:.6px;color:#d9c4a8;border-bottom:1px solid #7a5a47;margin-bottom:22px}
+.side h6{font-size:11px;letter-spacing:.8px;padding:0 10px 10px;color:#e8d5b5}
+.side .nv{display:block;width:100%;text-align:left;padding:13px 14px;border-radius:12px;margin-bottom:6px;color:#e9dccb;font-size:13.5px}
+.side .nv.on{background:#6b4a37;color:#fff;font-weight:600}
+.side .nv:hover:not(.on){background:#5a3b2b}
+.side .on-line{margin-top:auto;padding:0 10px;font-size:12px}
+.main{padding:28px 36px 40px;min-width:0}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
+.hd h2{font-size:26px;font-weight:700}.hd p{color:var(--mut);margin-top:4px;font-size:13px}
+.adm{display:flex;gap:12px;align-items:center;text-align:right}.adm small{display:block;color:var(--mut);font-size:11px}
+.av{width:40px;height:40px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.kpi{position:relative}.kpi span{color:var(--mut);font-size:12px}.kpi strong{display:block;font-size:26px;margin:8px 0 6px}
+.kpi i{font-style:normal;font-size:12px;color:var(--grn)}.kpi i.w{color:var(--red)}
+.kpi em{position:absolute;right:16px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--cream);display:grid;place-items:center;font-style:normal}
+.two{display:grid;grid-template-columns:1.9fr 1fr;gap:16px;margin-bottom:16px}
+.two.r{grid-template-columns:1.9fr 1fr}
+h3{font-size:18px;font-weight:700}.sub{color:var(--mut);font-size:12px;margin-top:3px}
+.chip{background:var(--cream);border-radius:99px;padding:8px 18px;font-weight:600;font-size:12px}
+.chart{display:flex;align-items:flex-end;gap:14px;height:200px;margin-top:26px;padding-left:46px;border-bottom:1px solid var(--line);position:relative}
+.chart:before{content:"Rp 2.4 jt";position:absolute;left:0;top:-4px;font-size:11px;color:var(--mut)}
+.chart:after{content:"Rp 1.2 jt";position:absolute;left:0;top:48%;font-size:11px;color:var(--mut)}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:0}
+.bar div{width:min(44px,70%);background:var(--sand);border-radius:10px;transition:height .5s}
+.bar.top div{background:var(--br)}
+.days{display:flex;gap:14px;padding-left:46px;margin-top:8px;color:var(--mut);font-size:12px}.days span{flex:1;text-align:center}
+.li{display:flex;gap:12px;align-items:center;margin-top:18px}
+.li .ic{width:38px;height:38px;border-radius:50%;background:var(--cream);display:grid;place-items:center;font-size:18px}
+.li b{display:block;font-size:13px}.li small{color:var(--mut);font-size:11px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;font-weight:500;color:var(--mut);padding:10px 12px}
+td{padding:12px;border-top:1px solid var(--line);font-size:12.5px}
+tr.sel td{background:var(--cream)}tr.sel td:first-child{box-shadow:inset 3px 0 var(--br)}
+tbody tr{cursor:pointer}
+.alert{background:var(--redbg);border-color:#EBCFC4}
+.alert .ai{display:flex;justify-content:space-between;margin-top:14px;font-size:12.5px;color:var(--red)}
+.alert .ai span:first-child{color:var(--ink)}.alert .ai span:first-child:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:10px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:600}
+.p-new,.p-prep{background:var(--ambbg);color:#8a5f14}.p-new{background:var(--cream);color:var(--br)}
+.p-ready,.p-done,.p-paid{background:var(--grnbg);color:var(--grn)}.p-ready{background:#E3ECDD}
+.p-ref{background:var(--redbg);color:var(--red)}
+.search{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 16px;height:46px}
+.search input{border:0;background:none;flex:1;font:inherit;color:inherit;height:100%;outline:none}
+.cats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 8px}
+.cats button{padding:9px 22px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:12.5px;font-weight:500}
+.cats button.on{background:var(--br);color:#fff;border-color:var(--br)}
+.pos{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-top:14px}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:left;display:block;width:100%}
+.pc .im{height:84px;border-radius:12px;background:var(--cream);display:grid;place-items:center;font-size:32px}
+.pc:nth-child(3n+1) .im,.mi:nth-child(3n+1) .im{background:var(--sand)}
+.pc b{display:block;margin-top:10px;font-size:13px}.pc span{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-weight:600;font-size:13px}
+.add{background:var(--br);color:#fff;border-radius:8px;padding:5px 11px;font-size:11px;font-weight:600}
+.row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:12.5px;color:var(--mut)}.row b{color:var(--ink)}
+.tot{border-top:1px solid var(--line);margin-top:8px;padding-top:12px;font-size:15px;font-weight:700;color:var(--ink)}.tot b{font-size:19px}
+.oi{background:var(--cream);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.oi small{display:block;color:var(--mut);font-size:11px;margin-top:3px}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.pay button{padding:12px 4px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:600;font-size:12.5px}
+.pay button.on{background:var(--cream);border-color:var(--br)}
+.btn{display:block;width:100%;background:var(--br);color:#fff;border-radius:14px;padding:15px;font-weight:700}
+.btn.o{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn:hover{background:var(--br2)}.btn.o:hover{background:var(--cream)}
+.split{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs button{padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:12px;font-weight:500}
+.tabs button.on{background:var(--br);color:#fff;border-color:var(--br)}
+.big{background:var(--cream);border-radius:16px;text-align:center;padding:18px;margin:14px 0}.big strong{display:block;font-size:30px;margin:4px 0}
+/* customer */
+.cwrap{display:flex;justify-content:center;padding:26px 16px;gap:30px}
+.phone{width:390px;max-width:100%;height:min(820px,calc(100vh - 100px));min-height:640px;background:var(--bg);border:1px solid var(--line);border-radius:36px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(60,35,20,.18)}
+.scr{flex:1;overflow-y:auto;padding:22px 20px 24px}
+.scr h2{font-size:28px;font-weight:700;margin-top:8px}.scr .tag{color:var(--mut);font-size:13px;margin:4px 0 18px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);padding:8px 0 12px}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--mut);padding:6px}
+.nav button.on{color:var(--ink);font-weight:700}.nav span{font-size:18px}
+.hero{background:var(--br);color:#fff;border-radius:22px;padding:22px;margin:16px 0 22px;position:relative;min-height:150px}
+.hero small{font-size:10.5px;letter-spacing:.6px;color:#e8d5b5}.hero h3{font-size:25px;line-height:1.2;margin:10px 0 16px;max-width:220px}
+.hero:after{content:"";position:absolute;right:22px;top:36px;width:86px;height:86px;border-radius:50%;background:#6b4a37;box-shadow:inset 0 0 0 16px #6b4a37,inset 0 0 0 28px #E8D5B5}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 12px}.sec a{font-size:12px;font-weight:600;cursor:pointer}
+.cat4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cat4 button{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 0;font-size:11.5px;font-weight:500;display:flex;flex-direction:column;gap:6px;align-items:center}.cat4 span{font-size:22px}
+.pop{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pop .pc .im{height:110px;font-size:42px}
+.mi{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;align-items:center}
+.mi .im{width:84px;height:84px;border-radius:12px;background:var(--cream);display:grid;place-items:center;font-size:32px;flex:none}
+.mi div.t{flex:1}.mi b{font-size:15px}.mi p{font-size:11.5px;color:var(--mut);margin:3px 0 10px}.mi .pr{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px}
+.plus{width:30px;height:30px;border-radius:50%;background:var(--br);color:#fff;font-size:16px}
+.qty{display:flex;gap:10px;align-items:center;background:var(--sand);border-radius:99px;padding:4px 10px;font-weight:600;font-size:12px}.qty button{font-size:15px;padding:0 4px}
+.note{width:100%;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px;font:inherit;color:inherit;min-height:56px;resize:none}
+.pm{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 18px}
+.pm button{padding:14px 0;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:12px;font-weight:600;display:flex;flex-direction:column;gap:6px;align-items:center}
+.pm button.on{background:var(--cream);border-color:var(--br)}
+.trk{background:var(--br);color:#fff;border-radius:22px;padding:22px;display:flex;justify-content:space-between;align-items:center;margin:14px 0 26px}
+.trk small{font-size:10.5px;letter-spacing:.5px;color:#e8d5b5}.trk h3{font-size:21px;margin:8px 0}.trk p{font-size:12px;color:#e8d5b5}
+.trk .c{width:56px;height:56px;border-radius:50%;background:#6b4a37;display:grid;place-items:center;font-size:24px;flex:none}
+.st{display:flex;gap:16px;position:relative;padding-bottom:30px}
+.st:not(:last-child):before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
+.st.d:not(:last-child):before{background:var(--grn)}
+.st i{width:28px;height:28px;border-radius:50%;background:var(--sand);flex:none;display:grid;place-items:center;font-style:normal;color:#fff;font-size:13px}
+.st.d i{background:var(--grn)}.st.c i{background:var(--br);box-shadow:inset 0 0 0 8px var(--br),inset 0 0 0 10px #fff}
+.st b{display:block;font-size:14px}.st small{color:var(--mut);font-size:11.5px}
+.info{background:var(--cream);border-radius:12px;padding:14px;font-size:12px}
+.pf{display:flex;gap:16px;align-items:center}.pf .av{width:64px;height:64px;font-size:22px}
+.list{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:8px}
+.list button{display:flex;width:100%;gap:14px;align-items:center;padding:15px 16px;border-top:1px solid var(--line);text-align:left;font-size:13.5px;font-weight:500}.list button:first-child{border-top:0}
+.list em{margin-left:auto;font-style:normal;color:var(--mut);font-size:12px}
+.tg{width:44px;height:26px;border-radius:99px;background:var(--br);position:relative;margin-left:auto}.tg:after{content:"";position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}.tg.off{background:var(--sand)}.tg.off:after{right:auto;left:3px}
+.side-note{max-width:300px;align-self:center;color:var(--mut);font-size:13px;line-height:1.6}
+.side-note b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--br);color:#fff;padding:12px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+@media (max-width:1100px){.grid4{grid-template-columns:repeat(2,1fr)}.two,.pos,.split{grid-template-columns:1fr}.side-note{display:none}}
+@media (max-width:820px){.shell{grid-template-columns:1fr}.side{flex-direction:row;flex-wrap:wrap;gap:4px;padding:14px;align-items:center}.side small{border:0;padding:0 10px;margin:0}.side h6,.side .on-line{display:none}.side .nv{width:auto;margin:0;padding:8px 12px}.main{padding:20px 16px}.tw{overflow-x:auto}.tw table{min-width:560px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><b>☕ Bean &amp; Brew – Coffee Shop Management</b>
+<nav class="seg" id="roles" aria-label="Pilih tampilan"></nav></header>
+<div id="app"></div>
+<div id="toast" class="toast" hidden></div>
+<script>
+const $=s=>document.querySelector(s), R=n=>"Rp "+Math.round(n).toLocaleString("id-ID");
+const MENU=[
+ {id:1,n:"Cappuccino",p:28000,e:"☕",c:"Coffee",d:"Espresso, milk foam"},
+ {id:2,n:"Iced Aren Latte",p:25000,e:"🥤",c:"Non Coffee",d:"Palm sugar & milk"},
+ {id:3,n:"Americano",p:22000,e:"🖤",c:"Coffee",d:"Bold & balanced"},
+ {id:4,n:"Caramel Latte",p:30000,e:"🥛",c:"Coffee",d:"Sweet layered coffee"},
+ {id:5,n:"Matcha Latte",p:29000,e:"🍵",c:"Non Coffee",d:"Ceremonial matcha, milk"},
+ {id:6,n:"Butter Croissant",p:18000,e:"🥐",c:"Pastry",d:"Flaky, baked every morning"},
+ {id:7,n:"Caramel Macchiato",p:32000,e:"🍮",c:"Coffee",d:"Sweet layered coffee"}];
+const M=id=>MENU.find(x=>x.id===id);
+const S={role:"customer",ctab:"home",cat:"All",q:"",
+ cart:[{id:2,q:1,o:"Large · Less ice"},{id:1,q:1,o:"Regular · Oat milk"}],cpay:"QRIS",placed:false,notif:true,
+ kpage:"pos",kcat:"All items",kq:"",pos:{1:1,2:1,6:1},kpay:"Cash",
+ of:"All orders",oq:"",osel:"#0248",ostat:{},tsel:"TX-0247",
+ mpage:"overview"};
+const ORD=[["#0252","10:42 AM","Nadia","Table 08","Dine in",2,51700,"New"],["#0251","10:39 AM","Rizky","Pickup · R51","Takeaway",2,48400,"New"],["#0250","10:36 AM","Dewi","Table 02","Dine in",2,63800,"Preparing"],["#0249","10:33 AM","Andi","Pickup · A49","Takeaway",1,33000,"Ready"],["#0248","10:28 AM","Sarah","Table 04","Dine in",3,78100,"Preparing"],["#0247","10:21 AM","Bima","Table 06","Dine in",3,81400,"Completed"],["#0246","10:15 AM","Maya","Pickup · M46","Takeaway",2,63800,"Completed"],["#0245","10:08 AM","Fajar","Table 01","Dine in",2,48400,"Completed"]];
+const TX=[["TX-0247","10:24 AM","#0247",81400,"QRIS","Paid","Bima · Table 06","QR-261024-0247",[[2,"Cappuccino","Regular · Oat milk",56000],[1,"Butter Croissant","1 item",18000]]],["TX-0246","10:18 AM","#0246",63800,"Debit","Paid","Maya · Pickup","DB-261024-0246",[[2,"Iced Aren Latte","Large",50000],[1,"Butter Croissant","1 item",18000]]],["TX-0245","10:11 AM","#0245",48400,"Cash","Paid","Fajar · Table 01","CS-261024-0245",[[2,"Americano","Regular",44000]]],["TX-0244","09:58 AM","#0244",55000,"QRIS","Paid","Table 05","QR-261024-0244",[[2,"Caramel Latte","Regular",60000]]],["TX-0243","09:45 AM","#0243",78100,"Cash","Paid","Table 03","CS-261024-0243",[[1,"Matcha Latte","Regular",29000]]],["TX-0242","09:32 AM","#0242",31900,"QRIS","Paid","Pickup","QR-261024-0242",[[1,"Cappuccino","Regular",28000]]],["TX-0241","09:16 AM","#0241",24200,"Debit","Paid","Pickup","DB-261024-0241",[[1,"Americano","Regular",22000]]],["TX-0240","09:02 AM","#0240",19800,"Cash","Refunded","Table 02","CS-261024-0240",[[1,"Butter Croissant","1 item",18000]]]];
+const pillc=s=>({New:"p-new",Preparing:"p-prep",Ready:"p-ready",Completed:"p-done",Paid:"p-paid",Refunded:"p-ref"}[s]);
+function toast(t){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2200)}
+function set(o){Object.assign(S,o);render()}
+const cartSub=()=>S.cart.reduce((a,i)=>a+M(i.id).p*i.q,0);
+
+/* ---------- CUSTOMER ---------- */
+function cCard(m){return `<button class="pc" onclick="addCart(${m.id})"><div class="im">${m.e}</div><b>${m.n}</b><span>${R(m.p)}<i class="plus" style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--br);color:#fff;font-style:normal">+</i></span></button>`}
+function addCart(id){const i=S.cart.find(x=>x.id===id);i?i.q++:S.cart.push({id,q:1,o:"Regular"});S.placed=false;toast(M(id).n+" ditambahkan ke keranjang");render()}
+function qty(id,d){const i=S.cart.find(x=>x.id===id);i.q+=d;if(i.q<1)S.cart=S.cart.filter(x=>x!==i);render()}
+function customer(){
+ const n=S.cart.reduce((a,i)=>a+i.q,0);
+ let h="";
+ if(S.ctab==="home")h=`<p class="tag" style="margin:0;font-size:13px">Good morning, Naufal ☀</p><h2 style="margin-top:2px">Find your coffee</h2>
+ <div class="search" style="margin-top:16px"><span>⌕</span><input placeholder="Search coffee, tea, pastry..." onfocus="set({ctab:'menu'})"></div>
+ <div class="hero"><small>WEEKEND SPECIAL</small><h3>A little coffee, a lot of comfort.</h3><button style="font-weight:600;font-size:13px" onclick="set({ctab:'menu'})">Order now →</button></div>
+ <div class="sec" style="margin-top:0"><h3>Categories</h3><a onclick="set({ctab:'menu'})">See all</a></div>
+ <div class="cat4">${[["Coffee","☕"],["Non Coffee","🥛"],["Pastry","🥐"],["Dessert","🍰"]].map(c=>`<button onclick="set({ctab:'menu',cat:'${c[0]}'})"><span>${c[1]}</span>${c[0]}</button>`).join("")}</div>
+ <div class="sec"><h3>Popular right now</h3><a onclick="set({ctab:'menu'})">View menu</a></div><div class="pop">${[1,2].map(i=>cCard(M(i))).join("")}</div>`;
+ if(S.ctab==="menu"){const l=MENU.filter(m=>(S.cat==="All"||m.c===S.cat||(S.cat==="Food"&&m.c==="Pastry"))&&m.n.toLowerCase().includes(S.q.toLowerCase()));
+ h=`<h2>Our Menu</h2><p class="tag">Made fresh, served with love.</p>
+ <div class="search"><span>⌕</span><input id="cq" placeholder="Search your favorite" value="${S.q}" oninput="S.q=this.value;render(true)"></div>
+ <div class="cats">${["All","Coffee","Non Coffee","Food"].map(c=>`<button class="${S.cat===c?"on":""}" onclick="set({cat:'${c}'})">${c}</button>`).join("")}</div>
+ ${l.map(m=>`<div class="mi"><div class="im">${m.e}</div><div class="t"><b>${m.n}</b><p>${m.d}</p><div class="pr">${R(m.p)}<button class="plus" aria-label="Tambah ${m.n}" onclick="addCart(${m.id})">+</button></div></div></div>`).join("")||'<p class="tag">Menu tidak ditemukan.</p>'}`}
+ if(S.ctab==="order"){
+  if(S.placed)h=`<h2>Track your order</h2><p class="tag">We’ll let you know when it’s ready.</p>
+  <div class="trk"><div><small>ORDER #CF-0248</small><h3>Your coffee is brewing!</h3><p>Estimated pickup: 10:25 AM</p></div><div class="c">☕</div></div>
+  <h3 style="margin-bottom:18px">Order progress</h3>
+  <div class="st d"><i>✓</i><div><b>Order received</b><small>10:05 AM</small></div></div>
+  <div class="st d"><i>✓</i><div><b>Being prepared</b><small>10:12 AM</small></div></div>
+  <div class="st c"><i></i><div><b>Ready for pickup</b><small>Estimated 10:25</small></div></div>
+  <div class="st"><i></i><div><b>Completed</b></div></div>
+  <div class="info">Show your order number at the counter.</div>`;
+  else if(!S.cart.length)h=`<h2>Your Cart</h2><p class="tag">Keranjang masih kosong.</p><button class="btn" onclick="set({ctab:'menu'})">Lihat menu</button>`;
+  else{const s=cartSub(),t=Math.round(s*.1);h=`<h2>Your Cart</h2><p class="tag">Almost there — enjoy your coffee!</p>
+  ${S.cart.map(i=>{const m=M(i.id);return `<div class="mi"><div class="im">${m.e}</div><div class="t"><div style="display:flex;justify-content:space-between;align-items:center"><b>${m.n}</b><span class="qty"><button aria-label="Kurangi" onclick="qty(${i.id},-1)">−</button>${i.q}<button aria-label="Tambah" onclick="qty(${i.id},1)">+</button></span></div><p style="margin-bottom:6px">${i.o}</p><div class="pr">${R(m.p*i.q)}</div></div></div>`}).join("")}
+  <h3 style="margin:20px 0 10px;font-size:15px">Order note</h3><textarea class="note" placeholder="Anything we should know? (optional)"></textarea>
+  <h3 style="margin:20px 0 0;font-size:15px">Payment method</h3>
+  <div class="pm">${[["QRIS","▦"],["Cash","▤"],["Debit","▣"]].map(p=>`<button class="${S.cpay===p[0]?"on":""}" onclick="set({cpay:'${p[0]}'})"><span style="font-size:16px">${p[1]}</span>${p[0]}</button>`).join("")}</div>
+  <h3 style="font-size:15px;margin-bottom:6px">Payment summary</h3>
+  <div class="row">Subtotal<b>${R(s)}</b></div><div class="row">Tax &amp; service<b>${R(t)}</b></div>
+  <div class="row tot">Total<b>${R(s+t)}</b></div>
+  <button class="btn" style="margin-top:16px" onclick="set({placed:true});toast('Pesanan dikirim via ${S.cpay}')">Place order →</button>`}}
+ if(S.ctab==="profile")h=`<h2>My profile</h2><p class="tag">Your coffee, your way.</p>
+ <div class="card" style="border-radius:20px"><div class="pf"><div class="av">N</div><div><b style="font-size:19px">Juve</b><p class="sub">juve@gmail.com</p></div></div>
+ <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px"><div><small class="sub">Phone number</small><br><b style="font-size:13px">+62 812-3456-7890</b></div><button class="add" style="padding:11px 16px;border-radius:12px;font-size:12px" onclick="toast('Edit profile')">Edit profile</button></div></div>
+ <h3 style="margin:22px 0 10px;font-size:15px">Account</h3><div class="list">${[["▤","Order history"],["♡","Favorite orders"],["▭","Payment methods"],["⛨","Privacy & security"]].map(x=>`<button onclick="${x[1]==="Order history"?"set({ctab:'order',placed:true})":`toast('${x[1]}')`}"><span>${x[0]}</span>${x[1]}<em>›</em></button>`).join("")}</div>
+ <h3 style="margin:22px 0 10px;font-size:15px">Settings &amp; support</h3><div class="list"><button onclick="set({notif:!S.notif})"><span>🔔</span>Notifications<i class="tg ${S.notif?"":"off"}"></i></button><button onclick="toast('English')"><span>🌐</span>Language<em>English ›</em></button><button onclick="toast('Help center')"><span>?</span>Help center<em>›</em></button></div>
+ <button class="btn o" style="margin-top:14px" onclick="toast('Berhasil log out')">⇥ Log out</button><p class="sub" style="text-align:center;margin-top:12px">Version 1.0.0</p>`;
+ const nv=[["home","⌂","Home"],["menu","▦","Menu"],["order","▣","Pesanan"],["profile","○","Profil"]];
+ return `<div class="cwrap"><div class="phone"><div class="scr" id="scr">${h}</div><nav class="nav">${nv.map(x=>`<button class="${S.ctab===x[0]?"on":""}" onclick="set({ctab:'${x[0]}'})"><span>${x[1]}${x[0]==="order"&&n&&!S.placed?`<sup style="font-size:10px;background:var(--red);color:#fff;border-radius:99px;padding:1px 5px;margin-left:2px">${n}</sup>`:""}</span>${x[2]}</button>`).join("")}</nav></div>
+ <p class="side-note"><b>Tampilan Customer</b><br>Home, Menu, Cart &amp; Checkout, Order Tracking, dan Profile. Tambah menu ke keranjang, atur jumlah, pilih pembayaran, lalu tekan <i>Place order</i> untuk melihat pelacakan pesanan.</p></div>`}
+
+/* ---------- SHELL (Kasir / Manajer) ---------- */
+function shell(label,items,cur,go,title,sub,body){
+ return `<div class="shell"><aside class="side"><h1>BEAN &amp; BREW</h1><small>COFFEE HOUSE</small><h6>${label}</h6>
+ ${items.map(i=>`<button class="nv ${i[0]===cur?"on":""}" onclick="${i[2]?`${go}('${i[0]}')`:`toast('Halaman ${i[1]} belum ada di desain')`}">${i[1]}</button>`).join("")}
+ <div class="on-line"><span class="dot"></span>Online</div></aside>
+ <main class="main"><div class="hd"><div><h2>${title}</h2><p>${sub}</p></div><div class="adm"><div><b>Admin</b><small>Staff account</small></div><div class="av">A</div></div></div>${body}</main></div>`}
+
+/* ---------- KASIR ---------- */
+const KNAV=[["pos","Point of Sale",1],["orders","Orders",1],["tx","Transactions",1],["menu","Menu",0],["set","Settings",0]];
+const kgo=p=>set({kpage:p});
+function posAdd(id){S.pos[id]=(S.pos[id]||0)+1;render()}
+function posRm(id){delete S.pos[id];render()}
+function kasir(){let t,s,b;
+ if(S.kpage==="pos"){
+  const l=MENU.filter(m=>(S.kcat==="All items"||m.c===S.kcat||(S.kcat==="Food"&&m.c==="Pastry"))&&m.n.toLowerCase().includes(S.kq.toLowerCase()));
+  const sub=Object.entries(S.pos).reduce((a,[id,q])=>a+M(+id).p*q,0),tax=Math.round(sub*.1),tot=sub+tax;
+  b=`<div class="pos"><div><div class="search"><span>⌕</span><input id="kq" placeholder="Search menu or scan item..." value="${S.kq}" oninput="S.kq=this.value;render(true)"></div>
+  <div class="cats">${["All items","Coffee","Non coffee","Food","Pastry"].map(c=>{const k=c==="Non coffee"?"Non Coffee":c;return `<button class="${S.kcat===k?"on":""}" onclick="set({kcat:'${k}'})">${c}</button>`}).join("")}</div>
+  <h3 style="margin-top:18px">Popular menu</h3><div class="pg">${l.map(m=>`<button class="pc" onclick="posAdd(${m.id})"><div class="im">${m.e}</div><b>${m.n}</b><span>${R(m.p)}<i class="add" style="font-style:normal">+ Add</i></span></button>`).join("")}</div></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><h3>Current order</h3><p class="sub">ORDER #0248 · Table 04</p></div><span class="chip">Dine in ▾</span></div>
+  ${Object.entries(S.pos).map(([id,q])=>{const m=M(+id);return `<div class="oi"><div><b>${m.n}</b>${q>1?" ×"+q:""}<small>${m.c==="Pastry"?"1 item":"Regular"}</small></div><div style="text-align:right"><b>${R(m.p*q)}</b><br><button class="sub" onclick="posRm(${id})" aria-label="Hapus ${m.n}">hapus</button></div></div>`}).join("")||'<p class="sub" style="margin:16px 0">Belum ada item.</p>'}
+  <h3 style="margin:20px 0 6px;font-size:15px">Payment summary</h3><div class="row">Subtotal<b>${R(sub)}</b></div><div class="row">Tax &amp; service<b>${R(tax)}</b></div><div class="row tot">Total payment<b>${R(tot)}</b></div>
+  <p class="sub" style="margin-top:10px">Payment method</p><div class="pay">${["Cash","QRIS","Debit"].map(p=>`<button class="${S.kpay===p?"on":""}" onclick="set({kpay:'${p}'})">${p}</button>`).join("")}</div>
+  <button class="btn" onclick="${sub?`S.pos={};toast('Pembayaran ${R(tot)} via ${S.kpay} berhasil');render()`:"toast('Tambahkan item dulu')"}">Charge · ${R(tot)}</button></div></div>`;
+  t="Point of Sale";s="Create orders, process payments, and manage customer pickup."}
+ if(S.kpage==="orders"){
+  const st=o=>S.ostat[o[0]]||o[7];
+  const cnt=k=>ORD.filter(o=>st(o)===k).length;
+  const l=ORD.filter(o=>(S.of==="All orders"||st(o)===S.of)&&(o[0]+o[2]+o[3]).toLowerCase().includes(S.oq.toLowerCase()));
+  const sel=ORD.find(o=>o[0]===S.osel)||ORD[4];
+  const items=[[1,"Iced Aren Latte","Large · Less ice",25000],[1,"Cappuccino","Regular · Oat milk",28000],[1,"Butter Croissant","1 item",18000]];
+  b=`<div class="grid4">${[["Today’s orders",12,"3 new orders to confirm"],["Preparing",cnt("Preparing")+2,"Currently in the kitchen"],["Ready to serve",cnt("Ready")+1,"Waiting for pickup or service"],["Completed",cnt("Completed"),"Served and paid today"]].map(k=>`<div class="card kpi"><span>${k[0]}</span><strong>${k[1]}</strong><i style="color:var(--mut)">${k[2]}</i></div>`).join("")}</div>
+  <div class="split" style="grid-template-columns:1fr 330px"><div class="card"><div style="display:flex;justify-content:space-between"><h3>All orders <small class="sub">12</small></h3><span class="sub">Today, 24 Oct 2026</span></div>
+  <div class="search" style="margin-top:14px"><span>⌕</span><input id="oq" placeholder="Search order number, customer or table..." value="${S.oq}" oninput="S.oq=this.value;render(true)"></div>
+  <div class="tabs">${["All orders","New","Preparing","Ready","Completed"].map(f=>`<button class="${S.of===f?"on":""}" onclick="set({of:'${f}'})">${f} ${f==="All orders"?12:cnt(f)+({Preparing:2,Ready:1,New:0,Completed:0}[f]||0)}</button>`).join("")}</div>
+  <div class="tw"><table><thead><tr><th>Order</th><th>Customer / Table</th><th>Service</th><th>Items</th><th>Total</th><th>Status</th></tr></thead><tbody>
+  ${l.map(o=>`<tr class="${o[0]===S.osel?"sel":""}" onclick="set({osel:'${o[0]}'})"><td><b>${o[0]}</b><br><small class="sub">${o[1]}</small></td><td><b>${o[2]}</b><br><small class="sub">${o[3]}</small></td><td>${o[4]}</td><td>${o[5]}</td><td><b>${R(o[6])}</b></td><td><span class="pill ${pillc(st(o))}">${st(o)}</span></td></tr>`).join("")}</tbody></table></div></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Order ${sel[0]}</h3><span class="pill ${pillc(st(sel))}">${st(sel)}</span></div><p class="sub">24 Oct 2026 · ${sel[1]}</p>
+  <div class="oi"><b>${sel[2]} · ${sel[3]}</b><span class="sub">${sel[4]}</span></div>
+  <div style="display:flex;justify-content:space-between;margin:16px 0 0"><b>Order items</b><span class="sub">${sel[5]} items</span></div>
+  ${items.slice(0,Math.min(3,sel[5])).map(i=>`<div class="oi"><div><b>${i[0]}× ${i[1]}</b><small>${i[2]}</small></div><b>${R(i[3])}</b></div>`).join("")}
+  <div class="row" style="margin-top:12px">Total payment<b>${R(sel[6])}</b></div>
+  <div class="row">Payment status<span class="pill p-prep">${st(sel)==="Completed"?"Paid":"Unpaid"}</span></div>
+  <button class="btn" style="margin-top:10px" onclick="S.ostat['${sel[0]}']='Ready';toast('Order ${sel[0]} ditandai siap');render()">✓ Mark as ready</button></div></div>`;
+  t="Orders";s="Track orders, manage preparation, and keep every pickup on time."}
+ if(S.kpage==="tx"){
+  const sel=TX.find(x=>x[0]===S.tsel);const ok=TX.filter(x=>x[5]==="Paid"),paid=ok.reduce((a,x)=>a+x[3],0)+0,ref=19800;
+  b=`<div class="grid4">${[["Total payments","Rp 382.800","Today · 24 Oct 2026"],["Successful transactions","7","Cash, QRIS, and Debit"],["Refunds","Rp 19.800","1 transaction refunded"],["Net sales","Rp 363.000","Total payments less refunds"]].map(k=>`<div class="card kpi"><span>${k[0]}</span><strong>${k[1]}</strong><i style="color:var(--mut)">${k[2]}</i></div>`).join("")}</div>
+  <div class="split" style="grid-template-columns:1fr 330px"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Transaction history</h3><button class="btn o" style="width:auto;padding:9px 16px" onclick="toast('Export dimulai')">⤓ Export</button></div>
+  <div class="tw"><table style="margin-top:12px"><thead><tr><th>Transaction</th><th>Time</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody>
+  ${TX.map(x=>`<tr class="${x[0]===S.tsel?"sel":""}" onclick="set({tsel:'${x[0]}'})"><td><b>${x[0]}</b><br><small class="sub">Order ${x[2]}</small></td><td>${x[1]}<br><small class="sub">24 Oct 2026</small></td><td><b>${R(x[3])}</b></td><td>${x[4]}</td><td><span class="pill ${pillc(x[5])}">${x[5]}</span></td></tr>`).join("")}</tbody></table></div>
+  <p class="sub" style="margin-top:12px">Showing 1–8 of 8 transactions · All amounts in IDR</p></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Transaction details</h3><span class="pill ${pillc(sel[5])}">${sel[5]}</span></div><p class="sub">${sel[0]} · Order ${sel[2]}</p>
+  <div class="big"><span class="sub">Total payment</span><strong>${R(sel[3])}</strong><small style="color:var(--grn);font-size:11px">Payment received · ${sel[4]}</small></div>
+  <div class="row">Paid at<b>24 Oct 2026</b></div><div class="row">Customer<b>${sel[6]}</b></div><div class="row">Cashier<b>Admin</b></div><div class="row">Reference number<b>${sel[7]}</b></div>
+  <div style="display:flex;justify-content:space-between;margin-top:12px"><b>Order items</b><span class="sub">${sel[8].length} items</span></div>
+  ${sel[8].map(i=>`<div class="oi"><div><b>${i[0]}× ${i[1]}</b><small>${i[2]}</small></div><b>${R(i[3])}</b></div>`).join("")}
+  <div class="row tot">Total payment<b>${R(sel[3])}</b></div>
+  <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:10px"><button class="btn o" onclick="toast('Refund ${sel[0]} diproses')">Refund</button><button class="btn" onclick="toast('Mencetak struk ${sel[0]}')">🖶 Print receipt</button></div></div></div>`;
+  t="Transactions";s="Review payments, track daily sales, and manage transaction records."}
+ return shell("CASHIER",KNAV,S.kpage,"kgo",t,s,b)}
+
+/* ---------- MANAJER ---------- */
+const mgo=()=>set({mpage:"overview"});
+const MNAV=[["overview","Overview",1],["sales","Sales reports",0],["products","Products",0],["inventory","Inventory",0],["emp","Employees",0]];
+function manajer(){
+ const v=[34,50,38,64,46,72,60],d=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+ const b=`<div class="grid4">${[["Total revenue","Rp 8.450.000","+12.8% this month","↗"],["Transactions","284","+8.2% this month","▣"],["Average order","Rp 29.750","+4.6% this month","◷"],["Low stock items","06","Needs attention","!"]].map((k,i)=>`<div class="card kpi"><span>${k[0]}</span><em ${i===3?'style="background:var(--redbg);color:var(--red)"':""}>${k[3]}</em><strong>${k[1]}</strong><i class="${i===3?"w":""}">${k[2]}</i></div>`).join("")}</div>
+ <div class="two"><div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h3>Sales performance</h3><p class="sub">Revenue overview · Last 7 days</p></div><span class="chip">This week ▾</span></div>
+ <div class="chart">${v.map((x,i)=>`<div class="bar ${i===5?"top":""}" title="${d[i]}"><div style="height:${x}%"></div></div>`).join("")}</div><div class="days">${d.map(x=>`<span>${x}</span>`).join("")}</div></div>
+ <div class="card"><h3>Best selling products</h3><p class="sub">Based on units sold</p>${[["☕","Cappuccino",86],["🥤","Iced Aren Latte",72],["🖤","Americano",58],["🥐","Butter Croissant",41]].map(p=>`<div class="li"><div class="ic">${p[0]}</div><div><b>${p[1]}</b><small>${p[2]} sold</small></div></div>`).join("")}</div></div>
+ <div class="two"><div class="card"><div style="display:flex;justify-content:space-between"><h3>Recent transactions</h3><b style="font-size:12px;cursor:pointer" onclick="set({role:'kasir',kpage:'tx'})">View all →</b></div>
+ <div class="tw"><table style="margin-top:10px"><thead><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Payment</th><th>Total</th></tr></thead><tbody>${[["#CF-0248","Naufal R.","QRIS","Rp 78.100"],["#CF-0247","Alya Putri","Cash","Rp 53.000"],["#CF-0246","Dimas A.","Debit","Rp 42.500"]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="sub">02 Nov 2026</td><td class="sub">${r[2]}</td><td><b>${r[3]}</b></td></tr>`).join("")}</tbody></table></div></div>
+ <div class="card alert"><h3>Inventory alert</h3><p class="sub">Items running low</p>${[["Fresh milk","2 packs left"],["Coffee beans","1.5 kg left"],["Caramel syrup","1 bottle left"]].map(a=>`<div class="ai"><span>${a[0]}</span><span>${a[1]}</span></div>`).join("")}</div></div>`;
+ return shell("MANAGER",MNAV,"overview","mgo","Dashboard overview","Monitor store performance, sales, inventory, and team activity.",b)}
+
+/* ---------- RENDER ---------- */
+function render(keep){
+ const sc=$("#scr")?$("#scr").scrollTop:0;
+ $("#roles").innerHTML=[["customer","Customer"],["kasir","Kasir"],["manajer","Manajer"]].map(r=>`<button class="${S.role===r[0]?"on":""}" onclick="set({role:'${r[0]}'})">${r[1]}</button>`).join("");
+ $("#app").innerHTML=S.role==="customer"?customer():S.role==="kasir"?kasir():manajer();
+ if($("#scr"))$("#scr").scrollTop=sc;
+ if(keep){const i=$("#cq")||$("#kq")||$("#oq");if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+}
+render();
+</script>
+</body>
+</html>
